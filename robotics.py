@@ -16,6 +16,7 @@ gripper = getHandles('BaxterVacuumCup')
 joints = []
 for i in range(1,7):
     joints.append(getHandles('UR3_joint'+str(i)))
+
   
 #Some helper functions used within the robot, for forward kinematics
 def axis(w,q):
@@ -69,6 +70,8 @@ def get_MS():
     
     return M, S
 
+
+
 class robot:
     def __init__(self, clientID, arm, gripper, joints):
         self.clientID = clientID
@@ -76,9 +79,6 @@ class robot:
         self.gripper = gripper
         self.joints = joints
         self.theta = [0, 0, 0, 0, 0, 0]
-        self.thetadot = []
-#        self.poseInit = False
-#        self.lenInit = False
        
         
 ##   Updates current joint angles. If hasn't been called, uses streaming. Otherwise, buffer mode
@@ -137,7 +137,7 @@ class robot:
         d = T[:,3][0:3]
         return d
             
-    def invk(self, xw, yw, zw):
+    def invk(self, coor):
         #the geometry in general is different than in lab5, must be careful
         L01 = 0.1519;
         L02 = 0.1115;
@@ -149,6 +149,9 @@ class robot:
         L08 = 0.1940 - 0.1122;  
         L09 = 0.2577 - 0.1940;
         thetas = [0.0, 0.0, 0.0, 0.0, -np.pi/2, 0.0]
+        xw = coor[0]
+        yw = coor[1]
+        zw = coor[2]
         # theta1
         R = math.sqrt(yw**2+ xw**2)
         #frame is rotated pi/2 radians so quadrants are incorrect using atan2
